@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jvanzz bug 😈</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Segoe UI', sans-serif; }
+
+  body {
+    min-height: 100vh;
+    background: #0a0a12;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(120, 0, 255, 0.25), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0, 200, 255, 0.2), transparent 45%),
+      linear-gradient(180deg, #0a0a12 0%, #131324 100%);
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: 40px;
+  }
+
+  /* Matrix rain effect */
+  .matrix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.08;
+    z-index: 0;
+    font-family: monospace;
+    font-size: 14px;
+    color: #0ff;
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 30px 20px 20px;
+  }
+
+  .logo {
+    font-size: 42px;
+    font-weight: 900;
+    background: linear-gradient(90deg, #a855f7, #22d3ee, #a855f7);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+  }
+
+  @keyframes shine { to { background-position: 200% center; } }
+
+  .subtitle {
+    margin-top: 8px;
+    color: #8b8ba7;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .warning-badge {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    color: #ff6b6b;
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Anime card */
+  .anime-card {
+    position: relative;
+    z-index: 2;
+    max-width: 340px;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.4), 0 0 80px rgba(34, 211, 238, 0.2);
+    background: #111;
+    position: relative;
+  }
+
+  .anime-card img {
+    width: 100%;
+    display: block;
+    filter: saturate(1.2) contrast(1.05);
+  }
+
+  .anime-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 18, 0.95) 100%);
+    pointer-events: none;
+  }
+
+  .anime-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 15px;
+    z-index: 3;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #22d3ee;
+    text-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+  }
+
+  /* Container */
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0 18px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Stats bar */
+  .stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .stat {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat .val {
+    font-size: 20px;
+    font-weight: 800;
+    color: #22d3ee;
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+  }
+
+  .stat .lbl {
+    font-size: 10px;
+    color: #7a7a95;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+
+  /* Panel */
+  .panel {
+    background: rgba(20, 20, 35, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .panel h2 {
+    font-size: 13px;
+    color: #a855f7;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel h2::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #a855f7;
+    box-shadow: 0 0 10px #a855f7;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* Input */
+  .input-group {
+    margin-bottom: 12px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 11px;
+    color: #8b8ba7;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.25s;
+    font-family: inherit;
+  }
+
+  .input-group input:focus, .input-group select:focus {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  }
+
+  /* Buttons */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 14px 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn:active { transform: scale(0.96); }
+
+  .btn-purple { background: linear-gradient(135deg, #a855f7, #6d28d9); box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4); }
+  .btn-cyan   { background: linear-gradient(135deg, #22d3ee, #0891b2); box-shadow: 0 4px 20px rgba(34, 211, 238, 0.4); }
+  .btn-red    { background: linear-gradient(135deg, #ff4d4d, #b91c1c); box-shadow: 0 4px 20px rgba(255, 77, 77, 0.4); }
+  .btn-green  { background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4); }
+  .btn-orange { background: linear-gradient(135deg, #f97316, #c2410c); box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4); }
+  .btn-pink   { background: linear-gradient(135deg, #ec4899, #be185d); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4); }
+
+  .btn-full { grid-column: span 2; }
+
+  /* Console log */
+  .console {
+    background: #05050a;
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #22d3ee;
+    height: 140px;
+    overflow-y: auto;
+    line-height: 1.6;
+  }
+
+  .console::-webkit-scrollbar { width: 6px; }
+  .console::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 3px; }
+
+  .console .line-ok { color: #22c55e; }
+  .console .line-err { color: #ff4d4d; }
+  .console .line-warn { color: #f59e0b; }
+  .console .line-info { color: #22d3ee; }
+  .console .line-purple { color: #a855f7; }
+
+  /* Progress */
+  .progress-wrap {
+    margin-top: 10px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 999px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .progress-wrap.active { display: block; }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #a855f7, #22d3ee);
+    border-radius: 999px;
+    transition: width 0.2s;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+  }
+
+  /* Modal / Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(20, 20, 35, 0.95);
+    border: 1px solid #22d3ee;
+    padding: 14px 22px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 999;
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.5);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(20px);
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #55556d;
+    font-size: 11px;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+  }
+
+  footer .heart { color: #ec4899; }
+
+  /* Glitch text */
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .glitch::before { animation: glitch1 2.5s infinite; color: #22d3ee; -webkit-text-fill-color: #22d3ee; }
+  .glitch::after  { animation: glitch2 3s infinite; color: #ec4899; -webkit-text-fill-color: #ec4899; }
+
+  @keyframes glitch1 {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    92% { transform: translate(-2px, 1px); opacity: 0.7; }
+    94% { transform: translate(2px, -1px); opacity: 0.7; }
+    96% { transform: translate(-1px, 2px); opacity: 0.7; }
+  }
+  @keyframes glitch2 {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    91% { transform: translate(2px, -2px); opacity: 0.7; }
+    93% { transform: translate(-2px, 2px); opacity: 0.7; }
+    95% { transform: translate(1px, -1px); opacity: 0.7; }
+  }
+
+  /* Loading spinner overlay */
+  .hack-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 998;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    backdrop-filter: blur(8px);
+  }
+
+  .hack-overlay.active { display: flex; }
+
+  .spinner {
+    width: 60px; height: 60px;
+    border: 4px solid rgba(168, 85, 247, 0.2);
+    border-top-color: #a855f7;
+    border-right-color: #22d3ee;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hack-overlay p {
+    font-family: monospace;
+    color: #22d3ee;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Matrix rain -->
+<div class="matrix" id="matrix"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Test</div>
+
+<!-- Hack overlay -->
+<div class="hack-overlay" id="hackOverlay">
+  <div class="spinner"></div>
+  <p id="hackText">INITIALIZING...</p>
+</div>
+
+<header>
+  <div class="logo glitch" data-text="jvanzz bug">jvanzz bug</div>
+  <div class="subtitle">Cyber Prank Panel v1.0</div>
+  <div class="warning-badge">⚠️ PRANK ONLY • NOT REAL</div>
+</header>
+
+<!-- Anime Card -->
+<div class="anime-card">
+  <img src="https://i.pinimg.com/originals/2b/8c/29/2b8c29b85b3f5c1a5e0f2e5b3e7a1b0f.jpg" alt="Anime"
+       onerror="this.src='https://api.dicebear.com/7.x/notionists/svg?seed=jvanzz&backgroundColor=a855f7'">
+  <div class="anime-caption">⚔️ CYBER WARRIOR ⚔️</div>
+</div>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="val" id="statReq">0</div>
+      <div class="lbl">Request</div>
+    </div>
+    <div class="stat">
+      <div class="val" id="statOTP">0</div>
+      <div class="lbl">OTP Sent</div>
+    </div>
+    <div class="stat">
+      <div class="val" id="statStatus">OFF</div>
+      <div class="lbl">Status</div>
+    </div>
+  </div>
+
+  <!-- Panel Target -->
+  <div class="panel">
+    <h2>Target Config</h2>
+    <div class="input-group">
+      <label>📱 Nomor WhatsApp</label>
+      <input type="tel" id="waNumber" placeholder="0812xxxxxxx" maxlength="15">
+    </div>
+    <div class="input-group">
+      <label>🎯 Mode Serangan</label>
+      <select id="attackMode">
+        <option value="spam">🚀 Spam Pesan</option>
+        <option value="otp">🔐 Spam OTP</option>
+        <option value="call">📞 Spam Call</option>
+        <option value="bug">💥 Bug Crash</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>⚡ Intensitas (1-100)</label>
+      <input type="number" id="intensity" value="50" min="1" max="100">
+    </div>
+  </div>
+
+  <!-- Panel Kontrol -->
+  <div class="panel">
+    <h2>Attack Control</h2>
+    <div class="btn-grid">
+      <button class="btn btn-purple" onclick="startAttack('spam')">📨 Spam WA</button>
+      <button class="btn btn-cyan" onclick="startAttack('otp')">🔐 Spam OTP</button>
+      <button class="btn btn-red" onclick="startAttack('bug')">💥 Bug Wa</button>
+      <button class="btn btn-orange" onclick="startAttack('call')">📞 Spam Call</button>
+      <button class="btn btn-pink btn-full" onclick="startAttack('all')">🔥 FULL ATTACK (Semua Fitur)</button>
+      <button class="btn btn-green btn-full" onclick="stopAttack()">🛑 STOP SERANGAN</button>
+    </div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Console -->
+  <div class="panel">
+    <h2>System Console</h2>
+    <div class="console" id="console">
+      <div class="line-info">[SYSTEM] jvanzz bug initialized...</div>
+      <div class="line-purple">[SYSTEM] Loading modules: WA-BUG, OTP-SPAM, CALL-FLOOD</div>
+      <div class="line-ok">[READY] Semua modul siap digunakan.</div>
+      <div class="line-warn">[NOTICE] Ini cuma prank, ga beneran ngirim apa-apa 😹</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Made with <span class="heart">♥</span> by <b style="color:#a855f7;">jvanzz</b> • Prank Only 😈
+</footer>
+
+<script>
+  /* ====== MATRIX RAIN ====== */
+  const matrix = document.getElementById('matrix');
+  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789jvanzz';
+  let rain = '';
+  for (let i = 0; i < 150; i++) {
+    let line = '';
+    for (let j = 0; j < 60; j++) line += chars[Math.floor(Math.random() * chars.length)];
+    rain += line + '\n';
+  }
+  matrix.textContent = rain;
+
+  /* ====== TOAST ====== */
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(msg, color = '#22d3ee') {
+    toast.textContent = msg;
+    toast.style.borderColor = color;
+    toast.style.boxShadow = `0 0 30px ${color}80`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  /* ====== CONSOLE ====== */
+  const consoleEl = document.getElementById('console');
+  function log(msg, type = 'info') {
+    const div = document.createElement('div');
+    div.className = 'line-' + type;
+    const time = new Date().toLocaleTimeString('id-ID', {hour12:false});
+    div.textContent = `[${time}] ${msg}`;
+    consoleEl.appendChild(div);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  /* ====== STATE ====== */
+  let attacking = false;
+  let reqCount = 0;
+  let otpCount = 0;
+  let progressInterval = null;
+
+  const statsEl = {
+    req: document.getElementById('statReq'),
+    otp: document.getElementById('statOTP'),
+    status: document.getElementById('statStatus')
+  };
+
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar = document.getElementById('progressBar');
+  const overlay = document.getElementById('hackOverlay');
+  const hackText = document.getElementById('hackText');
+
+  /* ====== FAKE LOG SEQUENCE ====== */
+  const fakeLogs = {
+    spam: [
+      'Connecting to WhatsApp API...',
+      'Bypassing authentication layer...',
+      'Injecting spam payload...',
+      'Sending message #%N%...',
+      'Message delivered (FAKE)',
+      'Encrypting session...',
+      'Spoofing device ID...',
+      'Payload executed ✓'
+    ],
+    otp: [
+      'Requesting OTP endpoint...',
+      'Generating fake OTP codes...',
+      'OTP #%N% sent to target (FAKE)',
+      'Bypassing rate-limit...',
+      'Spoofing sender gateway...',
+      'OTP flood in progress...'
+    ],
+    call: [
+      'Opening VoIP tunnel...',
+      'Spoofing caller ID...',
+      'Call #%N% initiated (FAKE)',
+      'Looping call queue...',
+      'Target phone ringing (simulated)...'
+    ],
+    bug: [
+      'Analyzing WA version...',
+      'Searching for bug vulnerability...',
+      'Crafting crash payload...',
+      'Injecting bug exploit...',
+      'Target app crashed (simulated) 😹',
+      'Preparing next payload...'
+    ]
+  };
+
+  /* ====== ATTACK LOGIC ====== */
+  function startAttack(mode) {
+    if (attacking) { showToast('⚠️ Serangan masih jalan, stop dulu!', '#ff4d4d'); return; }
+
+    const number = document.getElementById('waNumber').value.trim();
+    if (!number && mode !== 'all') { showToast('❌ Isi nomor WA dulu bang!', '#ff4d4d'); return; }
+    if (number && !/^\d+$/.test(number)) { showToast('❌ Nomor cuma angka doang!', '#ff4d4d'); return; }
+
+    const intensity = parseInt(document.getElementById('intensity').value) || 50;
+    attacking = true;
+    statsEl.status.textContent = 'ON';
+    statsEl.status.style.color = '#22c55e';
+
+    showToast(`🔥 ${mode.toUpperCase()} dimulai! (PRANK)`, '#a855f7');
+    log(`=== ATTACK: ${mode.toUpperCase()} ===`, 'purple');
+    log(`Target: ${number || 'MULTI'} | Intensity: ${intensity}`, 'info');
+
+    overlay.classList.add('active');
+    hackText.textContent = 'CONNECTING...';
+
+    setTimeout(() => hackText.textContent = 'BYPASSING SECURITY...', 800);
+    setTimeout(() => hackText.textContent = 'INJECTING PAYLOAD...', 1600);
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      log('Connection established ✓', 'ok');
+      runFakeSequence(mode, intensity);
+    }, 2400);
+  }
+
+  function runFakeSequence(mode, intensity) {
+    let logs;
+    if (mode === 'all') {
+      logs = [...fakeLogs.spam, ...fakeLogs.otp, ...fakeLogs.call, ...fakeLogs.bug];
+    } else {
+      logs = fakeLogs[mode] || fakeLogs.spam;
+    }
+
+    let idx = 0;
+    let prog = 0;
+
+    progressWrap.classList.add('active');
+    progressBar.style.width = '0%';
+
+    const interval = setInterval(() => {
+      if (!attacking) { clearInterval(interval); return; }
+
+      const logMsg = logs[idx % logs.length].replace('%N%', Math.floor(Math.random() * 9999));
+      const types = ['info', 'ok', 'purple', 'warn'];
+      log(logMsg, types[Math.floor(Math.random() * types.length)]);
+
+      reqCount++;
+      statsEl.req.textContent = reqCount;
+
+      if (mode === 'otp' || mode === 'all') {
+        otpCount++;
+        statsEl.otp.textContent = otpCount;
+      }
+
+      prog = (prog + (intensity / 10)) % 100;
+      progressBar.style.width = prog + '%';
+
+      idx++;
+
+      // Random chance to show dramatic effect
+      if (idx % 8 === 0) {
+        showToast('⚡ Payload delivered... (PRANK)', '#22d3ee');
+      }
+
+    }, 400);
+
+    progressInterval = interval;
+  }
+
+  function stopAttack() {
+    if (!attacking) { showToast('ℹ️ Ga ada serangan yang jalan', '#f59e0b'); return; }
+    attacking = false;
+    clearInterval(progressInterval);
+    statsEl.status.textContent = 'OFF';
+    statsEl.status.style.color = '#ff4d4d';
+    progressBar.style.width = '0%';
+    progressWrap.classList.remove('active');
+    log('=== SERANGAN DIHENTIKAN ===', 'err');
+    log(`Total request: ${reqCount} | Total OTP: ${otpCount}`, 'warn');
+    showToast('🛑 Serangan dihentikan', '#ff4d4d');
+  }
+
+  /* ====== BOOT ANIMATION ====== */
+  window.addEventListener('load', () => {
+    setTimeout(() => log('Loading UI components...', 'info'), 300);
+    setTimeout(() => log('Anime module loaded ⚔️', 'purple'), 700);
+    setTimeout(() => log('Siap bro, tinggal isi nomor & gas! 😈', 'ok'), 1200);
+  });
+
+  /* ====== FUN: klik logo ====== */
+  document.querySelector('.logo').addEventListener('click', () => {
+    showToast('😈 jvanzz bug v1.0 — Prank Panel', '#a855f7');
+    log('Logonya diklik, ga ada apa-apa 😹', 'warn');
+  });
+</script>
+</body>
+</html>
